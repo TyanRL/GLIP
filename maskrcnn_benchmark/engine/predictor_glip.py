@@ -138,16 +138,17 @@ class GLIPDemo(object):
             custom_entity = None,
             alpha = 0.0):
         predictions = self.compute_prediction(original_image, original_caption, custom_entity)
-        top_predictions = self._post_process(predictions, thresh)
+        return self.visualize_with_predictions(original_image, predictions, alpha=1.0, text_size=.5, text_pixel=1)
+        # top_predictions = self._post_process(predictions, thresh)
 
-        result = original_image.copy()
-        if self.show_mask_heatmaps:
-            return self.create_mask_montage(result, top_predictions)
-        result = self.overlay_boxes(result, top_predictions)
-        result = self.overlay_entity_names(result, top_predictions)
-        if self.cfg.MODEL.MASK_ON:
-            result = self.overlay_mask(result, top_predictions)
-        return result, top_predictions
+        # result = original_image.copy()
+        # if self.show_mask_heatmaps:
+        #     return self.create_mask_montage(result, top_predictions)
+        # result = self.overlay_boxes(result, top_predictions)
+        # result = self.overlay_entity_names(result, top_predictions)
+        # if self.cfg.MODEL.MASK_ON:
+        #     result = self.overlay_mask(result, top_predictions)
+        # return result, top_predictions
 
     def visualize_with_predictions(self, 
             original_image, 
