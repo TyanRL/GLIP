@@ -4,6 +4,8 @@ build/
 DATASET/
 OUTPUT/
 MODEL/
+INPUT/
+RESULTS/
 
 # compilation and distribution
 __pycache__
