@@ -6,11 +6,12 @@ tensorboardX
 ftfy 
 prettytable 
 pymongo
-transformers==4.12.3
+transformers==4.46.3
 matplotlib
 opencv-python
 nltk
 inflect
 scipy
 pycocotools
-numpy<2.0
+numpy==1.24.4
+jupyterlab
