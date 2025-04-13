@@ -2,11 +2,16 @@
 #include <ATen/ATen.h>
 #include <ATen/cuda/CUDAContext.h>
 
-#include <THC/THC.h>
+//#include <THC/THC.h>
 #include <THC/THCDeviceUtils.cuh>
 
 #include <vector>
 #include <iostream>
+
+#define THCCeilDiv(x, y) (((x) + (y) - 1) / (y))
+
+#define THCudaCheck(err) \
+    TORCH_CHECK(err == cudaSuccess, "CUDA error: ", cudaGetErrorString(err))
 
 int const threadsPerBlock = sizeof(unsigned long long) * 8;
 
@@ -85,13 +90,16 @@ at::Tensor ml_nms_cuda(const at::Tensor boxes, float nms_overlap_thresh) {
 
   scalar_t* boxes_dev = boxes_sorted.data_ptr<scalar_t>();
 
-  THCState *state = at::globalContext().lazyInitCUDA(); // TODO replace with getTHCState
-
-  unsigned long long* mask_dev = NULL;
+  //unsigned long long* mask_dev = NULL;
   //THCudaCheck(THCudaMalloc(state, (void**) &mask_dev,
   //                      boxes_num * col_blocks * sizeof(unsigned long long)));
 
-  mask_dev = (unsigned long long*) THCudaMalloc(state, boxes_num * col_blocks * sizeof(unsigned long long));
+  //mask_dev = (unsigned long long*) THCudaMalloc(state, boxes_num * col_blocks * sizeof(unsigned long long));
+
+  auto mask_tensor = at::empty({boxes_num, col_blocks}, at::device(at::kCUDA).dtype(at::kLong));
+  // `at::kLong` is `int64_t`, which is 64-bit; same as `unsigned long long`
+
+  unsigned long long* mask_dev = reinterpret_cast<unsigned long long*>(mask_tensor.data_ptr<int64_t>());
 
   dim3 blocks(THCCeilDiv(boxes_num, threadsPerBlock),
               THCCeilDiv(boxes_num, threadsPerBlock));
@@ -127,7 +135,6 @@ at::Tensor ml_nms_cuda(const at::Tensor boxes, float nms_overlap_thresh) {
     }
   }
 
-  THCudaFree(state, mask_dev);
   // TODO improve this part
   return std::get<0>(order_t.index({
                        keep.narrow(/*dim=*/0, /*start=*/0, /*length=*/num_to_keep).to(

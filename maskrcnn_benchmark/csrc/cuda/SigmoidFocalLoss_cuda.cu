@@ -5,7 +5,7 @@
 #include <ATen/ATen.h>
 #include <ATen/cuda/CUDAContext.h>
 
-#include <THC/THC.h>
+//#include <THC/THC.h>
 #include <THC/THCAtomics.cuh>
 #include <THC/THCDeviceUtils.cuh>
 
@@ -16,6 +16,10 @@
   for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < n; \
        i += blockDim.x * gridDim.x)
 
+#define THCCeilDiv(x, y) (((x) + (y) - 1) / (y))
+
+#define THCudaCheck(err) \
+    TORCH_CHECK(err == cudaSuccess, "CUDA error: ", cudaGetErrorString(err))
 
 template <typename T>
 __global__ void SigmoidFocalLossForward(const int nthreads, 
