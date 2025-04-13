@@ -6,20 +6,20 @@
 https://github.com/MarcusW03/GLIP
 
 ## Download large model path
-cd GLIP
-mkdir MODEL
+cd GLIP \
+mkdir MODEL \
 wget https://huggingface.co/GLIPModel/GLIP/resolve/main/glip_large_model.pth -O MODEL/glip_large_model.pth
 
 ## Create environment either with conda or python environment
-	### run the bash script create_env.sh
-./create_env
-	### create_env also does some other stuff like run setup script
+* #run the bash script create_env.sh
+* #create_env also does some other stuff like run setup script \
+./create_env 
 
 ## at some point, activate environment, run python interactive
-python3
-import nltk
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
+python3 \
+import nltk \
+nltk.download('punkt_tab') \
+nltk.download('averaged_perceptron_tagger_eng') \
 
 ## End instructions
 
