@@ -58,6 +58,9 @@ class GLIPDemo(object):
         self.confidence_threshold = confidence_threshold
 
         self.tokenizer = self.build_tokenizer()
+        self.entities = None
+        self.plus     = False
+
 
     def build_transform(self):
         """
