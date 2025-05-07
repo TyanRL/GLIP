@@ -7,6 +7,7 @@ file
 import torch
 from torch import nn
 from torch.nn import functional as F
+import torch.amp as amp
 
 from ..balanced_positive_negative_sampler import BalancedPositiveNegativeSampler
 from ..utils import cat, concat_box_prediction_layers
@@ -91,7 +92,7 @@ class RPNLossComputation(object):
 
         return labels, regression_targets
 
-    @custom_fwd(cast_inputs=torch.float32)
+    @amp.custom_fwd(cast_inputs=torch.float32,  device_type='cuda')
     def __call__(self, anchors, objectness, box_regression, targets):
         """
         Arguments:
@@ -226,7 +227,7 @@ class FocalLossComputation(object):
 
         return labels, regression_targets
 
-    @custom_fwd(cast_inputs=torch.float32)
+    @amp.custom_fwd(cast_inputs=torch.float32,  device_type='cuda')
     def __call__(self, anchors, box_cls, box_regression, targets):
         """
         Arguments:
@@ -447,7 +448,7 @@ class FCOSLossComputation(object):
                      (top_bottom.min(dim=-1)[0] / top_bottom.max(dim=-1)[0])
         return torch.sqrt(centerness)
 
-    @custom_fwd(cast_inputs=torch.float32)
+    @amp.custom_fwd(cast_inputs=torch.float32,  device_type='cuda')
     def __call__(self, locations, box_cls, box_regression, centerness, targets):
         """
         Arguments:
@@ -779,6 +780,7 @@ class ATSSLossComputation(torch.nn.Module):
             cls_labels_per_im[anchors_to_gt_values == -INF] = 0
 
             if positive_map is not None:
+                anchors_to_gt_indexs = anchors_to_gt_indexs.to(token_per_im.device)
                 token_labels_per_im = token_per_im[anchors_to_gt_indexs]
                 unmatched_labels = torch.zeros(token_labels_per_im.shape[1], device=token_labels_per_im.device)
                 # TODO: temporarially disable the [NoObj] token logic, and only restrict to binary loss
@@ -844,7 +846,7 @@ class ATSSLossComputation(torch.nn.Module):
         assert not torch.isnan(centerness).any()
         return centerness
 
-    @custom_fwd(cast_inputs=torch.float32)
+    @amp.custom_fwd(cast_inputs=torch.float32,  device_type='cuda')
     def __call__(self, box_cls, box_regression, centerness, targets, anchors,
                  captions=None,
                  positive_map=None,

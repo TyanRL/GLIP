@@ -204,6 +204,23 @@ class DatasetCatalog(object):
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_minival2014.json"
         },
+
+        "coco_udo_val_grounding": {
+            "img_dir": "e:/git/ml/videoanalytics/ds/udo_5/val/images/default/",
+            "ann_file": "e:/git/ml/videoanalytics/ds/udo_5/val/annotations/instances_default.json"
+        },
+        "coco_udo_train_grounding": {
+            "img_dir": "e:/git/ml/videoanalytics/ds/udo_5/train/images/default/",
+            "ann_file": "e:/git/ml/videoanalytics/ds/udo_5/train/annotations/instances_default.json"
+        },
+        "coco_sic_val_grounding": {
+            "img_dir": "e:/git/ml/videoanalytics/ds/small_id_card/val/images/default/",
+            "ann_file": "e:/git/ml/videoanalytics/ds/small_id_card/val/annotations/instances_default.json"
+        },
+        "coco_sic_train_grounding": {
+            "img_dir": "e:/git/ml/videoanalytics/ds/small_id_card/train/images/default/",
+            "ann_file": "e:/git/ml/videoanalytics/ds/small_id_card/train/annotations/instances_default.json"
+        },
     }
 
     @staticmethod

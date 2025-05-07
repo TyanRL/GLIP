@@ -1,5 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 import torch
+import torch.amp as amp
 from torch.nn import functional as F
 
 from maskrcnn_benchmark.layers import smooth_l1_loss
@@ -119,7 +120,7 @@ class FastRCNNLossComputation(object):
         self._proposals = proposals
         return proposals
 
-    @custom_fwd(cast_inputs=torch.float32)
+    @amp.custom_fwd(cast_inputs=torch.float32,  device_type='cuda')
     def __call__(self, class_logits, box_regression):
         """
         Computes the loss for Faster R-CNN.
